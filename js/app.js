@@ -16,9 +16,11 @@ var GameState = {
     this.load.image('arrowButton', 'assets/images/arrowButton.png')
     this.load.image('actionButton', 'assets/images/actionButton.png')
     this.load.image('barrel', 'assets/images/barrel.png')
+    this.load.image('ringfire', 'assets/images/ringfire.png')
 
     this.load.spritesheet('player', 'assets/images/player_spritesheet.png', 28, 30, 5, 1, 1)
     this.load.spritesheet('fire', 'assets/images/fire_spritesheet.png', 20, 21, 2, 1, 1)
+    this.load.spritesheet('sping', 'assets/images/SpringSpriteSheet.png', 50, 95, 6)
 
     this.load.text('level3', 'assets/data/level3.json')
   },
@@ -38,11 +40,29 @@ var GameState = {
     this.platforms = this.add.group()
     this.platforms.enableBody = true
 
+
     this.levelData.platformData.forEach(function(element){
       this.platforms.create(element.x, element.y, 'platform')
     }, this)
     this.platforms.setAll('body.immovable', true)
     this.platforms.setAll('body.allowGravity', false)
+
+    //ring of fire
+    this.ringfires = this.add.group()
+    this.ringfires.enableBody = true
+
+    this.levelData.ringOfFireData.forEach(function(element){
+      this.ringfires.create(element.x, element.y, 'ringfire')
+    }, this)
+    this.ringfires.setAll('body.immovable', true)
+    this.ringfires.setAll('body.allowGravity', false)
+
+    //sping
+    this.sping = this.add.sprite(900, 520, 'sping')
+    // this.sping.animations.add('jumping', [1, 0, 2, 3, 4, 5], 6, true)
+    this.game.physics.arcade.enable(this.sping);
+    this.sping.body.immovable = true
+    this.sping.body.allowGravity = false
 
     //player
     this.player = this.add.sprite(30, 500, 'player', 3)
@@ -51,6 +71,9 @@ var GameState = {
   },
   update: function() {
     this.game.physics.arcade.collide(this.player, this.ground)
+    this.game.physics.arcade.collide(this.player, this.platforms)
+    this.game.physics.arcade.collide(this.player, this.sping, this.spinging)
+
     this.player.body.velocity.x = 0;
 
     if(this.cursors.left.isDown) {
@@ -68,11 +91,15 @@ var GameState = {
       this.player.frame = 3;
     }
 
-    if(this.cursors.up.isDown) {
-      // this.player.body.velocity.y = -this.JUMPING_SPEED;
+    if(this.cursors.up.isDown && this.player.body.touching.down) {
+      this.player.body.velocity.y = -this.JUMPING_SPEED;
       // this.player.customParams.mustJump = false;
     }
 
+  },
+  spinging: function() {
+    console.log("play");
+    this.sping.play("jumping")
   }
 }
 
