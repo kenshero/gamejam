@@ -7,7 +7,7 @@ var GameState = {
     this.cursors = this.game.input.keyboard.createCursorKeys();
 
     this.RUNNING_SPEED = 180;
-    this.JUMPING_SPEED = 550;
+    this.JUMPING_SPEED = 350;
   },
   preload: function() {
     this.load.image('ground', 'assets/images/ground.png')
@@ -17,10 +17,10 @@ var GameState = {
     this.load.image('actionButton', 'assets/images/actionButton.png')
     this.load.image('barrel', 'assets/images/barrel.png')
     this.load.image('ringfire', 'assets/images/ringfire.png')
+    this.load.image('pipe', 'assets/images/pipe.png')
 
     this.load.spritesheet('player', 'assets/images/player_spritesheet.png', 28, 30, 5, 1, 1)
     this.load.spritesheet('fire', 'assets/images/fire_spritesheet.png', 20, 21, 2, 1, 1)
-    this.load.spritesheet('sping', 'assets/images/SpringSpriteSheet.png', 50, 95, 6)
 
     this.load.text('level3', 'assets/data/level3.json')
   },
@@ -57,38 +57,39 @@ var GameState = {
     this.ringfires.setAll('body.immovable', true)
     this.ringfires.setAll('body.allowGravity', false)
 
-    //sping
-    this.sping = this.add.sprite(900, 520, 'sping')
-    // this.sping.animations.add('jumping', [1, 0, 2, 3, 4, 5], 6, true)
-    this.game.physics.arcade.enable(this.sping);
-    this.sping.body.immovable = true
-    this.sping.body.allowGravity = false
+    //pipe
+    this.pipe = this.add.sprite(960, 546, 'pipe')
+    this.game.physics.arcade.enable(this.pipe)
+    this.pipe.body.allowGravity = false;
+    this.pipe.body.immovable = true;
 
     //player
-    this.player = this.add.sprite(30, 500, 'player', 3)
-    this.player.animations.add('walking', [0, 1, 2, 1], 6, true)
+    this.player = this.add.sprite(30, 500, 'goal')
+    // this.player.animations.add('walking', [0, 1, 2, 1], 6, true)
     this.game.physics.arcade.enable(this.player);
   },
   update: function() {
     this.game.physics.arcade.collide(this.player, this.ground)
     this.game.physics.arcade.collide(this.player, this.platforms)
-    this.game.physics.arcade.collide(this.player, this.sping, this.spinging)
+    this.game.physics.arcade.collide(this.player, this.pipe, this.tidPipe)
+
+    this.game.physics.arcade.overlap(this.player, this.ringfires, this.killPlayer)
 
     this.player.body.velocity.x = 0;
 
     if(this.cursors.left.isDown) {
       this.player.body.velocity.x = -this.RUNNING_SPEED;
-      this.player.scale.setTo(1, 1);
-      this.player.play('walking');
+      // this.player.scale.setTo(1, 1);
+      // this.player.play('walking');
     }
     else if(this.cursors.right.isDown) {
       this.player.body.velocity.x = this.RUNNING_SPEED;
-      this.player.scale.setTo(-1, 1);
-      this.player.play('walking');
+      // this.player.scale.setTo(-1, 1);
+      // this.player.play('walking');
     }
     else {
-      this.player.animations.stop();
-      this.player.frame = 3;
+      // this.player.animations.stop();
+      // this.player.frame = 3;
     }
 
     if(this.cursors.up.isDown && this.player.body.touching.down) {
@@ -100,6 +101,14 @@ var GameState = {
   spinging: function() {
     console.log("play");
     this.sping.play("jumping")
+  },
+  killPlayer: function() {
+    console.log("die")
+    game.state.start('GameState')
+  },
+  tidPipe: function() {
+    console.log("die")
+    game.state.start('GameState')
   }
 }
 
