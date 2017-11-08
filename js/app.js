@@ -57,6 +57,22 @@ var GameState = {
     this.ringfires.setAll('body.immovable', true)
     this.ringfires.setAll('body.allowGravity', false)
 
+    var line1 = new Phaser.Line(200, 500, 230, 500);
+    var line2 = new Phaser.Line(200, 570, 230, 570);
+    var line3 = new Phaser.Line(40, 500, 80, 500);
+    var line4 = new Phaser.Line(40, 500, 80, 500);
+    var graphics=game.add.graphics(0,0);
+    //var graphics=game.add.graphics(line.start.x,line.start.y);//if you have a static line
+    graphics.lineStyle(2, 0xffd900, 1);
+    graphics.moveTo(line1.start.x,line1.start.y);
+    graphics.lineTo(line1.end.x,line1.end.y);
+    graphics.endFill();
+
+    graphics.lineStyle(2, 0xffd900, 1);
+    graphics.moveTo(line2.start.x,line2.start.y);
+    graphics.lineTo(line2.end.x,line2.end.y);
+    graphics.endFill();
+
     //pipe
     this.pipe = this.add.sprite(960, 546, 'pipe')
     this.game.physics.arcade.enable(this.pipe)
@@ -64,9 +80,10 @@ var GameState = {
     this.pipe.body.immovable = true;
 
     //player
-    this.player = this.add.sprite(30, 500, 'goal')
+    this.player = this.add.sprite(30, 500, 'barrel')
     // this.player.animations.add('walking', [0, 1, 2, 1], 6, true)
     this.game.physics.arcade.enable(this.player);
+
   },
   update: function() {
     this.game.physics.arcade.collide(this.player, this.ground)
