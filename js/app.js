@@ -57,21 +57,59 @@ var GameState = {
     this.ringfires.setAll('body.immovable', true)
     this.ringfires.setAll('body.allowGravity', false)
 
-    var line1 = new Phaser.Line(200, 500, 230, 500);
-    var line2 = new Phaser.Line(200, 570, 230, 570);
-    var line3 = new Phaser.Line(40, 500, 80, 500);
-    var line4 = new Phaser.Line(40, 500, 80, 500);
-    var graphics=game.add.graphics(0,0);
-    //var graphics=game.add.graphics(line.start.x,line.start.y);//if you have a static line
-    graphics.lineStyle(2, 0xffd900, 1);
-    graphics.moveTo(line1.start.x,line1.start.y);
-    graphics.lineTo(line1.end.x,line1.end.y);
-    graphics.endFill();
+    // var line1 = new Phaser.Line(200, 500, 230, 500);
+    // var line2 = new Phaser.Line(200, 570, 230, 570);
 
-    graphics.lineStyle(2, 0xffd900, 1);
-    graphics.moveTo(line2.start.x,line2.start.y);
-    graphics.lineTo(line2.end.x,line2.end.y);
-    graphics.endFill();
+    // var line3 = new Phaser.Line(500, 500, 530, 500);
+    // var line4 = new Phaser.Line(500, 570, 530, 570);
+
+    // var line5 = new Phaser.Line(350, 500, 380, 500);
+    // var line6 = new Phaser.Line(350, 570, 380, 570);
+
+    // var line7 = new Phaser.Line(650, 500, 680, 500);
+    // var line8 = new Phaser.Line(650, 570, 680, 570);
+
+    // var graphics=game.add.graphics(0,0);
+    //var graphics=game.add.graphics(line.start.x,line.start.y);//if you have a static line
+    // graphics.lineStyle(2, 0xffd900, 1);
+    // graphics.moveTo(line1.start.x,line1.start.y);
+    // graphics.lineTo(line1.end.x,line1.end.y);
+    // graphics.endFill();
+
+    // graphics.lineStyle(2, 0xffd900, 1);
+    // graphics.moveTo(line2.start.x,line2.start.y);
+    // graphics.lineTo(line2.end.x,line2.end.y);
+    // graphics.endFill();
+
+    // graphics.lineStyle(2, 0xffd900, 1);
+    // graphics.moveTo(line3.start.x,line3.start.y);
+    // graphics.lineTo(line3.end.x,line3.end.y);
+    // graphics.endFill();
+
+    // graphics.lineStyle(2, 0xffd900, 1);
+    // graphics.moveTo(line4.start.x,line4.start.y);
+    // graphics.lineTo(line4.end.x,line4.end.y);
+    // graphics.endFill();
+
+    // graphics.lineStyle(2, 0xffd900, 1);
+    // graphics.moveTo(line5.start.x,line5.start.y);
+    // graphics.lineTo(line5.end.x,line5.end.y);
+    // graphics.endFill();
+
+    // graphics.lineStyle(2, 0xffd900, 1);
+    // graphics.moveTo(line6.start.x,line6.start.y);
+    // graphics.lineTo(line6.end.x,line6.end.y);
+    // graphics.endFill();
+
+    // graphics.lineStyle(2, 0xffd900, 1);
+    // graphics.moveTo(line7.start.x,line7.start.y);
+    // graphics.lineTo(line7.end.x,line7.end.y);
+    // graphics.endFill();
+
+    // graphics.lineStyle(2, 0xffd900, 1);
+    // graphics.moveTo(line8.start.x,line8.start.y);
+    // graphics.lineTo(line8.end.x,line8.end.y);
+    // graphics.endFill();
 
     //pipe
     this.pipe = this.add.sprite(960, 546, 'pipe')
@@ -89,8 +127,8 @@ var GameState = {
     this.game.physics.arcade.collide(this.player, this.ground)
     this.game.physics.arcade.collide(this.player, this.platforms)
     this.game.physics.arcade.collide(this.player, this.pipe, this.tidPipe)
-
-    this.game.physics.arcade.overlap(this.player, this.ringfires, this.killPlayer)
+    this.checkCollideRingOfFire()
+    // this.game.physics.arcade.overlap(this.player, this.ringfires, this.killPlayer)
 
     this.player.body.velocity.x = 0;
 
@@ -121,11 +159,30 @@ var GameState = {
   },
   killPlayer: function() {
     console.log("die")
-    game.state.start('GameState')
+    // game.state.start('GameState')
   },
   tidPipe: function() {
     console.log("die")
     game.state.start('GameState')
+  },
+  checkCollideRingOfFire: function() {
+    if(this.player.x >= 190 && this.player.x <= 240 && this.player.y > 550 && this.player.y > 500 ){
+      console.log("this.player.x : ", this.player.x)
+      game.state.start('GameState')
+    }
+    if(this.player.x >= 350 && this.player.x <= 380 && this.player.y > 550 && this.player.y > 500 ){
+      console.log("this.player.x : ", this.player.x)
+      game.state.start('GameState')
+    }
+    if(this.player.x >= 500 && this.player.x <= 530 && this.player.y > 550 && this.player.y > 500 ){
+      console.log("this.player.x : ", this.player.x)
+      game.state.start('GameState')
+    }
+    if(this.player.x >= 650 && this.player.x <= 680 && this.player.y > 550 && this.player.y > 500 ){
+      console.log("this.player.x : ", this.player.x)
+      game.state.start('GameState')
+    }
+    console.log("this.player.y : ", this.player.y)
   }
 }
 
