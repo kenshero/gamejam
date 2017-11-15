@@ -57,99 +57,52 @@ var GameState = {
     this.ringfires.setAll('body.immovable', true)
     this.ringfires.setAll('body.allowGravity', false)
 
-    // var line1 = new Phaser.Line(200, 500, 230, 500);
-    // var line2 = new Phaser.Line(200, 570, 230, 570);
-
-    // var line3 = new Phaser.Line(500, 500, 530, 500);
-    // var line4 = new Phaser.Line(500, 570, 530, 570);
-
-    // var line5 = new Phaser.Line(350, 500, 380, 500);
-    // var line6 = new Phaser.Line(350, 570, 380, 570);
-
-    // var line7 = new Phaser.Line(650, 500, 680, 500);
-    // var line8 = new Phaser.Line(650, 570, 680, 570);
-
-    // var graphics=game.add.graphics(0,0);
-    //var graphics=game.add.graphics(line.start.x,line.start.y);//if you have a static line
-    // graphics.lineStyle(2, 0xffd900, 1);
-    // graphics.moveTo(line1.start.x,line1.start.y);
-    // graphics.lineTo(line1.end.x,line1.end.y);
-    // graphics.endFill();
-
-    // graphics.lineStyle(2, 0xffd900, 1);
-    // graphics.moveTo(line2.start.x,line2.start.y);
-    // graphics.lineTo(line2.end.x,line2.end.y);
-    // graphics.endFill();
-
-    // graphics.lineStyle(2, 0xffd900, 1);
-    // graphics.moveTo(line3.start.x,line3.start.y);
-    // graphics.lineTo(line3.end.x,line3.end.y);
-    // graphics.endFill();
-
-    // graphics.lineStyle(2, 0xffd900, 1);
-    // graphics.moveTo(line4.start.x,line4.start.y);
-    // graphics.lineTo(line4.end.x,line4.end.y);
-    // graphics.endFill();
-
-    // graphics.lineStyle(2, 0xffd900, 1);
-    // graphics.moveTo(line5.start.x,line5.start.y);
-    // graphics.lineTo(line5.end.x,line5.end.y);
-    // graphics.endFill();
-
-    // graphics.lineStyle(2, 0xffd900, 1);
-    // graphics.moveTo(line6.start.x,line6.start.y);
-    // graphics.lineTo(line6.end.x,line6.end.y);
-    // graphics.endFill();
-
-    // graphics.lineStyle(2, 0xffd900, 1);
-    // graphics.moveTo(line7.start.x,line7.start.y);
-    // graphics.lineTo(line7.end.x,line7.end.y);
-    // graphics.endFill();
-
-    // graphics.lineStyle(2, 0xffd900, 1);
-    // graphics.moveTo(line8.start.x,line8.start.y);
-    // graphics.lineTo(line8.end.x,line8.end.y);
-    // graphics.endFill();
-
     //pipe
-    this.pipe = this.add.sprite(960, 546, 'pipe')
+    this.pipe = this.add.sprite(960, 580, 'pipe')
     this.game.physics.arcade.enable(this.pipe)
     this.pipe.body.allowGravity = false;
     this.pipe.body.immovable = true;
 
+    this.pipe2 = this.add.sprite(0, 380, 'pipe')
+    this.game.physics.arcade.enable(this.pipe2)
+    this.pipe2.body.allowGravity = false;
+    this.pipe2.body.immovable = true;
+
     //player
     this.player = this.add.sprite(30, 500, 'barrel')
+    this.pipeAnimate = false
     // this.player.animations.add('walking', [0, 1, 2, 1], 6, true)
     this.game.physics.arcade.enable(this.player);
 
   },
   update: function() {
-    this.game.physics.arcade.collide(this.player, this.ground)
-    this.game.physics.arcade.collide(this.player, this.platforms)
-    this.game.physics.arcade.collide(this.player, this.pipe, this.tidPipe)
-    this.checkCollideRingOfFire()
-    // this.game.physics.arcade.overlap(this.player, this.ringfires, this.killPlayer)
+    if(!this.pipeAnimate) {
+      this.game.physics.arcade.collide(this.player, this.ground)
+      this.game.physics.arcade.collide(this.player, this.platforms)
+      this.game.physics.arcade.collide(this.player, this.pipe, this.tidPipe, null, this)
+      this.game.physics.arcade.collide(this.player, this.pipe2, this.tidPipe2, null, this)
+      this.checkCollideRingOfFire()
+      this.player.body.velocity.x = 0;
 
-    this.player.body.velocity.x = 0;
+      if(this.cursors.left.isDown) {
+        this.player.body.velocity.x = -this.RUNNING_SPEED;
+        // this.player.scale.setTo(1, 1);
+        // this.player.play('walking');
+      }
+      else if(this.cursors.right.isDown) {
+        this.player.body.velocity.x = this.RUNNING_SPEED;
+        // this.player.scale.setTo(-1, 1);
+        // this.player.play('walking');
+      }
+      else {
+        // this.player.animations.stop();
+        // this.player.frame = 3;
+      }
 
-    if(this.cursors.left.isDown) {
-      this.player.body.velocity.x = -this.RUNNING_SPEED;
-      // this.player.scale.setTo(1, 1);
-      // this.player.play('walking');
-    }
-    else if(this.cursors.right.isDown) {
-      this.player.body.velocity.x = this.RUNNING_SPEED;
-      // this.player.scale.setTo(-1, 1);
-      // this.player.play('walking');
-    }
-    else {
-      // this.player.animations.stop();
-      // this.player.frame = 3;
-    }
-
-    if(this.cursors.up.isDown && this.player.body.touching.down) {
-      this.player.body.velocity.y = -this.JUMPING_SPEED;
-      // this.player.customParams.mustJump = false;
+      if(this.cursors.up.isDown && this.player.body.touching.down) {
+        this.player.body.velocity.y = -this.JUMPING_SPEED;
+        // this.player.customParams.mustJump = false;
+      }
     }
 
   },
@@ -162,27 +115,72 @@ var GameState = {
     // game.state.start('GameState')
   },
   tidPipe: function() {
-    console.log("die")
-    game.state.start('GameState')
+    if(this.cursors.down.isDown) {
+      this.player.body.allowGravity = false;
+      this.pipeAnimate = true
+      game.world.swap(this.player, this.pipe);
+      this.animatingDownPipe(1)
+    }
+    // game.state.start('GameState')
+  },
+  tidPipe2: function() {
+    if(this.cursors.down.isDown) {
+      this.player.body.allowGravity = false;
+      this.pipeAnimate = true
+      game.world.swap(this.player, this.pipe2);
+      this.animatingDownPipe(2)
+    }
+    console.log(this.player.x);
+    console.log(this.player.y);
+    // game.state.start('GameState')
   },
   checkCollideRingOfFire: function() {
     if(this.player.x >= 190 && this.player.x <= 240 && this.player.y > 550 && this.player.y > 500 ){
-      console.log("this.player.x : ", this.player.x)
-      game.state.start('GameState')
+      this.gameOver()
     }
     if(this.player.x >= 350 && this.player.x <= 380 && this.player.y > 550 && this.player.y > 500 ){
-      console.log("this.player.x : ", this.player.x)
-      game.state.start('GameState')
+      this.gameOver()
     }
     if(this.player.x >= 500 && this.player.x <= 530 && this.player.y > 550 && this.player.y > 500 ){
-      console.log("this.player.x : ", this.player.x)
-      game.state.start('GameState')
+      this.gameOver()
     }
     if(this.player.x >= 650 && this.player.x <= 680 && this.player.y > 550 && this.player.y > 500 ){
-      console.log("this.player.x : ", this.player.x)
-      game.state.start('GameState')
+      this.gameOver()
     }
-    console.log("this.player.y : ", this.player.y)
+  },
+  animatingDownPipe: function(pipeNum){
+    this.pipeAnimate = true
+    if(pipeNum == 1) {
+      this.game.time.events.loop(1000, function() {
+          this.player.y += 0.2
+        }, this)
+      this.animatingUpPipe(2)
+    } else if(pipeNum == 2){
+      this.game.time.events.loop(1000, function() {
+          this.player.y += 0.2
+        }, this)
+      this.animatingUpPipe(1)
+    }
+  },
+  animatingUpPipe: function(pipeNum){
+    if(pipeNum == 1) {
+      this.player.x = 965
+      this.player.y = 580
+      this.game.time.events.loop(1000, function() {
+          this.player.y -= 0.2
+        }, this)
+    } else if(pipeNum == 2) {
+      this.player.x = 12
+      this.player.y = 370
+      this.game.time.events.loop(20, function() {
+          this.player.y -= 0.4
+        }, this)
+    }
+      // this.pipeAnimate = false
+  },
+  gameOver: function(){
+    alert("Game Over!")
+    game.state.start('GameState')
   }
 }
 
